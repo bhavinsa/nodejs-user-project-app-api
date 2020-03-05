@@ -75,6 +75,28 @@ const project = {
                 'message': error.message, 'stack': error.stack
             });
         }
+    },
+
+    assigned: async (req, res) => {
+        try {
+            const projectData = await Project.find({ 'members': { "$in": [req.user._id] }, 'isDeleted': false }).populate('members creator').exec();
+            res.status(201).send(projectData);
+        } catch (error) {
+            res.status(400).send({
+                'message': error.message, 'stack': error.stack
+            });
+        }
+    },
+
+    search: async (req, res) => {
+        try {
+            const projectData = await Project.find({ 'members': { "$in": [req.user._id] }, 'isDeleted': false, "name": new RegExp(req.body.searchKey, "i") }).populate('members creator').exec();
+            res.status(201).send(projectData);
+        } catch (error) {
+            res.status(400).send({
+                'message': error.message, 'stack': error.stack
+            });
+        }
     }
 
 }

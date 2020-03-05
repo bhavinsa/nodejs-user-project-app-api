@@ -1,6 +1,6 @@
 const express = require('express')
 const port = process.env.PORT
-const userRouter = require('./routers/router')
+const userRouter = require('./routers/user')
 const projectRouter = require('./routers/project')
 require('./db/db')
 
