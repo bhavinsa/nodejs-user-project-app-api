@@ -10,5 +10,6 @@ router.post("/removeMembers", [auth, projectAuth], projectController.removeMembe
 router.post("/delete", [auth, projectAuth], projectController.delete);
 router.post("/assigned", auth, projectController.assigned);
 router.post("/search", auth, projectController.search);
+router.post("/comment", auth, projectController.comment);
 
 module.exports = router;

@@ -292,6 +292,65 @@
 			"response": []
 		},
 		{
+			"name": "Add Comment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "comment",
+							"value": "test Project",
+							"type": "text"
+						},
+						{
+							"key": "projectId",
+							"value": "5e5f761be863fd57c41be7c9",
+							"type": "text"
+						},
+						{
+							"key": "members",
+							"value": "5e5f711f1605424258612ebe,5e5f75d0e863fd57c41be7c0,5e5f75d5e863fd57c41be7c2",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/project/comment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"project",
+						"comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Project",
 			"request": {
 				"method": "POST",
@@ -333,6 +392,102 @@
 					"port": "3001",
 					"path": [
 						"project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Project Of User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "projectId",
+							"value": "5e5f761be863fd57c41be7c9",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/project/assigned",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"project",
+						"assigned"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search - All Project Of User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "searchKey",
+							"value": "123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/project/search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"project",
+						"search"
 					]
 				}
 			},
@@ -414,7 +569,7 @@
 					"urlencoded": [
 						{
 							"key": "projectId",
-							"value": "5e5f761be863fd57c41be7c9",
+							"value": "5e5f750c8049603058d79d4f",
 							"type": "text"
 						},
 						{

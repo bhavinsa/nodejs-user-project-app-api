@@ -1,4 +1,6 @@
+const mongoose = require('mongoose')
 const Project = require('../models/Project')
+const Comment = require('../models/Comment');
 const project = {
     create: async (req, res) => {
         try {
@@ -55,7 +57,32 @@ const project = {
 
     getProject: async (req, res) => {
         try {
-            const result = await Project.findOne({ "_id": req.body.projectId }).populate('members creator').exec();
+            // const result = await Project.findOne({ "_id": req.body.projectId }).populate('members creator').exec();
+            const result = await Project.aggregate([
+                { $match: { "_id": mongoose.Types.ObjectId(req.body.projectId) } },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "creator",
+                        foreignField: "_id",
+                        as: "User"
+                    }
+                },
+                {
+                    $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$User", 0] }, "$$ROOT"] } }
+                },
+                {
+                    $lookup: {
+                        from: "comments",
+                        localField: "_id",
+                        foreignField: "projectId",
+                        as: "comments"
+                    }
+                },
+                {
+                    $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$comments", 0] }, "$$ROOT"] } }
+                }
+            ]);
             res.status(201).send(result);
         } catch (error) {
             res.status(400).send({
@@ -92,6 +119,22 @@ const project = {
         try {
             const projectData = await Project.find({ 'members': { "$in": [req.user._id] }, 'isDeleted': false, "name": new RegExp(req.body.searchKey, "i") }).populate('members creator').exec();
             res.status(201).send(projectData);
+        } catch (error) {
+            res.status(400).send({
+                'message': error.message, 'stack': error.stack
+            });
+        }
+    },
+
+    comment: async (req, res) => {
+        try {
+            const comment = new Comment({
+                comment: req.body.comment,
+                creatorId: req.user.id,
+                projectId: req.body.projectId
+            })
+            const commentData = await comment.save();
+            res.status(201).send(commentData);
         } catch (error) {
             res.status(400).send({
                 'message': error.message, 'stack': error.stack
