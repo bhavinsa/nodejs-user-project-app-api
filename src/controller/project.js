@@ -65,11 +65,11 @@ const project = {
                         from: "users",
                         localField: "creator",
                         foreignField: "_id",
-                        as: "User"
+                        as: "users"
                     }
                 },
                 {
-                    $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$User", 0] }, "$$ROOT"] } }
+                    $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$users", 0] }, "$$ROOT"] } }
                 },
                 {
                     $lookup: {
@@ -81,7 +81,12 @@ const project = {
                 },
                 {
                     $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$comments", 0] }, "$$ROOT"] } }
-                }
+                },
+                {
+                    $project: {
+                        'comment': 0
+                    }
+                },
             ]);
             res.status(201).send(result);
         } catch (error) {
