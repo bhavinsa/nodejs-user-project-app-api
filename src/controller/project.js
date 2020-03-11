@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Project = require('../models/Project')
-const Comment = require('../models/Comment');
+const User = require('../models/User')
+const Comment = require('../models/Comment')
 const project = {
     create: async (req, res) => {
         try {
@@ -88,7 +89,40 @@ const project = {
                     }
                 },
             ]);
+
+            const comments = result ? result[0].comments : []
+            let userIds = []
+            comments.filter(data => {
+                userIds.push(mongoose.Types.ObjectId(data.creatorId));
+            })
+
+            const members = result ? result[0].members : []
+            const memberUserIds = members.filter(data => mongoose.Types.ObjectId(data))
+            userIds = [...memberUserIds, ...userIds];
+            const userData = await User.find({
+                '_id': {
+                    $in: userIds
+                },
+                'isDeleted': false
+            })
+
+            comments.filter(data => {
+                data.userInfo = userData.find(user => {
+                    return mongoose.Types.ObjectId(user._id).valueOf().toString() == mongoose.Types.ObjectId(data.creatorId).valueOf().toString()
+                })
+            })
+
+            let membersInfo = [];
+            members.filter(data => {
+                const member = userData.find(user => {
+                    return mongoose.Types.ObjectId(user._id).valueOf().toString() == mongoose.Types.ObjectId(data).valueOf().toString()
+                })
+                membersInfo.push(member);
+            })
+
+            result[0].membersInfo = membersInfo;
             res.status(201).send(result);
+
         } catch (error) {
             res.status(400).send({
                 'message': error.message, 'stack': error.stack
