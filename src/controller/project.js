@@ -59,8 +59,8 @@ const project = {
     getProject: async (req, res) => {
         try {
             // const result = await Project.findOne({ "_id": req.body.projectId }).populate('members creator').exec();
-            const result = await Project.aggregate([
-                { $match: { "_id": mongoose.Types.ObjectId(req.body.projectId) } },
+            const data = await Project.aggregate([
+                { $match: { "_id": mongoose.Types.ObjectId(req.body.projectId), 'isDeleted': false } },
                 {
                     $lookup: {
                         from: "users",
@@ -89,38 +89,40 @@ const project = {
                     }
                 },
             ]);
-
-            const comments = result ? result[0].comments : []
-            let userIds = []
-            comments.filter(data => {
-                userIds.push(mongoose.Types.ObjectId(data.creatorId));
-            })
-
-            const members = result ? result[0].members : []
-            const memberUserIds = members.filter(data => mongoose.Types.ObjectId(data))
-            userIds = [...memberUserIds, ...userIds];
-            const userData = await User.find({
-                '_id': {
-                    $in: userIds
-                },
-                'isDeleted': false
-            })
-
-            comments.filter(data => {
-                data.userInfo = userData.find(user => {
-                    return mongoose.Types.ObjectId(user._id).valueOf().toString() == mongoose.Types.ObjectId(data.creatorId).valueOf().toString()
+            const result = data ? data[0] : [];
+            if (result) {
+                const comments = result.comments ? result.comments : []
+                let userIds = []
+                comments.filter(data => {
+                    userIds.push(mongoose.Types.ObjectId(data.creatorId));
                 })
-            })
 
-            let membersInfo = [];
-            members.filter(data => {
-                const member = userData.find(user => {
-                    return mongoose.Types.ObjectId(user._id).valueOf().toString() == mongoose.Types.ObjectId(data).valueOf().toString()
+                const members = result ? result.members : []
+                const memberUserIds = members.filter(data => mongoose.Types.ObjectId(data))
+                userIds = [...memberUserIds, ...userIds];
+                const userData = await User.find({
+                    '_id': {
+                        $in: userIds
+                    },
+                    'isDeleted': false
                 })
-                membersInfo.push(member);
-            })
 
-            result[0].membersInfo = membersInfo;
+                comments.filter(data => {
+                    data.userInfo = userData.find(user => {
+                        return mongoose.Types.ObjectId(user._id).valueOf().toString() == mongoose.Types.ObjectId(data.creatorId).valueOf().toString()
+                    })
+                })
+
+                let membersInfo = [];
+                members.filter(data => {
+                    const member = userData.find(user => {
+                        return mongoose.Types.ObjectId(user._id).valueOf().toString() == mongoose.Types.ObjectId(data).valueOf().toString()
+                    })
+                    membersInfo.push(member);
+                })
+
+                result[0] ? result[0].membersInfo = membersInfo : []
+            }
             res.status(201).send(result);
 
         } catch (error) {
