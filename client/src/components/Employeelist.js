@@ -7,25 +7,26 @@ import { AuthContext } from '../context/AuthContext';
 export const Employeelist = () => {
   const { employees, removeEmployee, setEmployee } = useContext(GlobalContext);
   const { auth, authToggle } = useContext(AuthContext);
-  const isLoad = false;
-
+  console.log(employees);
   setTimeout(() => {
     authToggle(true);
   }, 5000);
   const getEmpData = () => {
-    axios.get(`https://jsonplaceholder.typicode.com/users`).then(res => {
-      const empData = [];
-      res.data.filter(item => {
-        let tmpObj = {
-          id: item.id,
-          name: item.name,
-          location: item.address.city,
-          designation: item.website
-        };
-        empData.push(tmpObj);
+    if (employees.length == 0) {
+      axios.get(`https://jsonplaceholder.typicode.com/users`).then(res => {
+        const empData = [];
+        res.data.filter(item => {
+          let tmpObj = {
+            id: item.id,
+            name: item.name,
+            location: item.address.city,
+            designation: item.website
+          };
+          empData.push(tmpObj);
+        });
+        setEmployee(empData);
       });
-      setEmployee(empData);
-    });
+    }
   };
 
   useEffect(() => {
