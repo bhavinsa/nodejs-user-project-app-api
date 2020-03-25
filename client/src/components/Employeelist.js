@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useEffect, useCallback } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -7,12 +7,11 @@ import { AuthContext } from '../context/AuthContext';
 export const Employeelist = () => {
   const { employees, removeEmployee, setEmployee } = useContext(GlobalContext);
   const { auth, authToggle } = useContext(AuthContext);
-  console.log(employees);
   setTimeout(() => {
     authToggle(true);
   }, 5000);
-  const getEmpData = () => {
-    if (employees.length == 0) {
+  const getEmpData = useCallback(() => {
+    if (employees.length === 0) {
       axios.get(`https://jsonplaceholder.typicode.com/users`).then(res => {
         const empData = [];
         res.data.filter(item => {
@@ -23,18 +22,20 @@ export const Employeelist = () => {
             designation: item.website
           };
           empData.push(tmpObj);
+          return item;
         });
         setEmployee(empData);
+        return true;
       });
     }
-  };
+  }, [employees, setEmployee]);
 
   useEffect(() => {
     getEmpData();
     return function() {
       console.log('Unmount');
     };
-  }, []);
+  }, [getEmpData]);
 
   // useEffect(() => {
   //   getAuthData();
