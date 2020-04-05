@@ -19,6 +19,8 @@ export default (state, action) => {
         employees: [...state.employees, action.payload]
       };
     case 'EDIT_EMPLOYEE':
+      console.log(action);
+
       const updatedEmployee = action.payload;
 
       const updatedEmployees = state.employees.map(employee => {

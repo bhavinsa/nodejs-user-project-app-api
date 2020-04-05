@@ -10,6 +10,7 @@ export const Employeelist = () => {
   setTimeout(() => {
     authToggle(true);
   }, 5000);
+
   const getEmpData = useCallback(() => {
     if (employees.length === 0) {
       axios.get(`https://jsonplaceholder.typicode.com/users`).then(res => {
@@ -31,6 +32,7 @@ export const Employeelist = () => {
   }, [employees, setEmployee]);
 
   useEffect(() => {
+    console.log('mount');
     getEmpData();
     return function() {
       console.log('Unmount');
