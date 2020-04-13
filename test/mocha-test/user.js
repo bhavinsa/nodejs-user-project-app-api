@@ -1,5 +1,5 @@
 const { chai, server } = require('./config');
-const UserModel = require('../src/models/User');
+const UserModel = require('../../src/models/User');
 
 /**
  * Test cases to test all the authentication APIs

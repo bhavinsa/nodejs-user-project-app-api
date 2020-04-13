@@ -7,7 +7,7 @@ process.env.JWT_KEY = 'asdqwe@@';
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../src/app');
+let server = require('../../src/app');
 let should = chai.should();
 chai.use(chaiHttp);
 
