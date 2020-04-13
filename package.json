@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "env-cmd -f ./.env nodemon src/app.js",
-    "test": "nyc _mocha --timeout 10000 --exit --report lcovonly -- -R spec"
+    "test": "nyc mocha --timeout 10000 --exit --report lcovonly -- -R spec"
   },
   "author": "",
   "license": "MIT",

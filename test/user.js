@@ -1,4 +1,4 @@
-const { chai, server, should } = require('./testConfig');
+const { chai, server } = require('./config');
 const UserModel = require('../src/models/User');
 
 /**
@@ -50,7 +50,6 @@ describe('Auth', () => {
         .post('/user')
         .send(testData)
         .end((err, res) => {
-          console.log(res.body);
           res.should.have.status(201);
           res.body.should.have.property('name').eql(testData.name);
           testData.token = res.body.token;

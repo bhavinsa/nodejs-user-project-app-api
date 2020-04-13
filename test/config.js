@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 process.env.MONGODB_URL =
   'mongodb://127.0.0.1:27017/rest-api-nodejs-mongodb-test';
 process.env.JWT_KEY = 'asdqwe@@';
+
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
