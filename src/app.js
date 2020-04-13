@@ -11,8 +11,4 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/user', userRouter);
 app.use('/project', projectRouter);
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
 module.exports = app;
